@@ -1,4 +1,4 @@
-const inputText = await Bun.file(import.meta.resolveSync("./01.txt")).text();
+const inputText = await Bun.file(import.meta.resolveSync("./input")).text();
 const lines = inputText.split("\n");
 
 const digitTokens = {
