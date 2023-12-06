@@ -77,24 +77,24 @@ for (const record of records) {
   });
 }
 
-const part1Results = db
-  .query<{ gameId: number }, []>(
+const part1Result = db
+  .query<{ total: number }, []>(
     `
-		SELECT gameId
-		FROM game_records
-		GROUP BY gameId
-		HAVING
-			MAX(redCubes) <= 12 AND
-			MAX(greenCubes) <= 13 AND
-			MAX(blueCubes) <= 14
+    SELECT SUM(gameId) as total
+    FROM (
+      SELECT gameId
+      FROM game_records
+      GROUP BY gameId
+      HAVING
+        MAX(redCubes) <= 12 AND
+        MAX(greenCubes) <= 13 AND
+        MAX(blueCubes) <= 14
+    )
 	`
   )
-  .all();
+  .get();
 
-console.log(
-  "Part 1 Answer is ",
-  part1Results.reduce((sum, result) => sum + result.gameId, 0)
-);
+console.log("Part 1 Answer is ", part1Result?.total);
 
 const part2Result = db
   .query<{ total: number }, []>(
