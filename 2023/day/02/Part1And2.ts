@@ -77,7 +77,7 @@ for (const record of records) {
   });
 }
 
-const results = db
+const part1Results = db
   .query<{ gameId: number }, []>(
     `
 		SELECT gameId
@@ -92,8 +92,24 @@ const results = db
   .all();
 
 console.log(
-  "Answer is ",
-  results.reduce((sum, result) => sum + result.gameId, 0)
+  "Part 1 Answer is ",
+  part1Results.reduce((sum, result) => sum + result.gameId, 0)
 );
+
+const part2Result = db
+  .query<{ total: number }, []>(
+    `
+    SELECT SUM(power) as total
+    FROM (
+      SELECT
+        MAX(redCubes) * MAX(greenCubes) * MAX(blueCubes) as power
+      FROM game_records
+      GROUP BY gameId
+    )
+`
+  )
+  .get();
+
+console.log("Part 2 Answer is ", part2Result?.total);
 
 db.close();
