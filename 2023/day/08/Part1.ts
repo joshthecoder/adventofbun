@@ -1,21 +1,6 @@
-const inputText = await Bun.file(import.meta.resolveSync("./input")).text();
-const lines = inputText.split("\n");
+import { parseMap } from "./common";
 
-const [instructions, empty, ...map] = lines;
-
-const mapIndex = map.reduce<{ [key: string]: string[] }>((m, line) => {
-  const [key, destPair] = line.split("=").map((part) => part.trim());
-  const [left, right] = destPair
-    .replace("(", "")
-    .replace(")", "")
-    .split(",")
-    .map((part) => part.trim());
-
-  return {
-    ...m,
-    [key]: [left, right],
-  };
-}, {});
+const { instructions, map } = parseMap();
 
 let currentLoc = "AAA";
 let i;
@@ -26,7 +11,7 @@ while (currentLoc !== "ZZZ") {
   for (i = 0; i < instructions.length; i++, steps++) {
     if (currentLoc === "ZZZ") break;
     const nextTurn = instructions[i];
-    const [left, right] = mapIndex[currentLoc];
+    const [left, right] = map[currentLoc];
     if (nextTurn === "L") currentLoc = left;
     else currentLoc = right;
   }
